@@ -44,8 +44,11 @@ public class DestroyManager : MonoBehaviour
                     for(int k = 0; k < j + 1; k++)
                     {
                         GameObject refObject = GridManager.gridManagerClass.FindGameObject(i, k);
-                        GetPoint(refObject, i, k);
+                        DestroyObjects(refObject, i, k);
                     }
+                    //Puan güncellemesi yapılır.
+                    LevelManager.levelManagerClass.SetSlider(GridManager.gridManagerClass.grid[i].Length);
+
                     MoveObjects(i, j + 1);
                     i = 0;
                 }
@@ -58,7 +61,7 @@ public class DestroyManager : MonoBehaviour
         }
         destroyed = false;
     }
-    private void GetPoint(GameObject refObject, int row, int column)
+    private void DestroyObjects(GameObject refObject, int row, int column)
     {
         //Referans alınan objenin tagı değiştirilip silinir.
         refObject.tag = "destroyedObjects";
@@ -71,9 +74,6 @@ public class DestroyManager : MonoBehaviour
         }
         refObject.transform.parent = null;
         Destroy(refObject);
-
-        //Puan güncellemesi yapılır.
-        LevelManager.levelManagerClass.SetSlider();
         GridManager.gridManagerClass.grid[row][column] = 0;
     }
     private bool GroupControl(GameObject parentRefObj)

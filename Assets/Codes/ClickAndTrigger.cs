@@ -13,7 +13,7 @@ public class ClickAndTrigger : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.CompareTag("selectableObjects") || collision.CompareTag("deadLineObject"))
+        if(collision.CompareTag("selectableObjects"))
         {
             //Objelerin ekranı doldurması durumunda veya dead-line'a çarpması durumunda oyun kaybedilir.
             Time.timeScale = 0;

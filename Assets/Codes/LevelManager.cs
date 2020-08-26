@@ -69,11 +69,11 @@ public class LevelManager : MonoBehaviour
         LimitPointT.text = levelLimit.ToString();
         PointT.text = levelSlider.value.ToString();
     }
-    public void SetSlider()
+    public void SetSlider(int column)
     {
         gameAudio.clip = destroyAudio;
         gameAudio.Play();
-        levelPoint += pointPerBlock;
+        levelPoint += pointPerBlock * column;
         levelSlider.value = levelPoint;
 
         PointT.text = levelSlider.value.ToString();

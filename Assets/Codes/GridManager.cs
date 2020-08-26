@@ -6,9 +6,9 @@ public class GridManager : MonoBehaviour
     [SerializeField] private int offset = 2;
     [SerializeField] private int yellowBlockCount = 6;
     [SerializeField] private int yellowAreaMinWidth = 2;
-    [SerializeField] private int deadLineHeightLevel = 15;
-    [SerializeField] private float deadLinePosXMin = -5.5f;
-    [SerializeField] private float deadLinePosXMax = -4.5f;
+    [SerializeField] private int deadLineRowHeight = 15;
+    [SerializeField] private int deadLineColumnStart = 0;
+    [SerializeField] private int deadLineColumnFinish = 0;
     [SerializeField] private GameObject blockObject = null;
     [SerializeField] private GameObject deadLineObject = null;
     [SerializeField] private GameObject yellowBlockObject = null;
@@ -17,6 +17,7 @@ public class GridManager : MonoBehaviour
     private int availableAreaStart, availableAreaFinish;
     private int yellowPosXStart, yellowPosXFinish, yellowBlockCounter;
     public int[][] grid;
+    public int[][] deadLine;
     public float vertical, horizontal, verticalSize, horizontalSize;
     public static GridManager gridManagerClass;
     private void Awake()
@@ -36,9 +37,11 @@ public class GridManager : MonoBehaviour
         //grid dizisi tanımlanır. Dizideki tüm elemanlar row ve column deişkenine göre 0 değerini alır.
         //Fakat girilen row değişkeninin bir üst satırına 1 değeri atanır.
         grid = new int[row + 1][];
+        deadLine = new int[row + 1][];
         for(int i = 0; i < row + 1; i++)
         {
             grid[i] = new int[column];
+            deadLine[i] = new int[column];
             for (int j = 0; j < column; j++)
             {
                 if (i == row)
@@ -73,10 +76,18 @@ public class GridManager : MonoBehaviour
         //Dead-line oluşturmak için kullanılan metottur.
         //Editörden alınan değerlere göre grid üzerinde bir yerlerde bloklar arasında oluşturulur.
         GameObject deadLineObjectCopy = Instantiate(deadLineObject);
-        float yPos = (deadLineHeightLevel * verticalSize) - vertical;
-        float xPos = (deadLinePosXMax + deadLinePosXMin) / 2;
+        float yPos = (deadLineRowHeight * verticalSize) - vertical;
+        float xPos = (((float)(deadLineColumnFinish - deadLineColumnStart + 1) / 2) * horizontalSize) - horizontal;
         deadLineObjectCopy.transform.position = new Vector2(xPos, yPos);
-        deadLineObjectCopy.transform.localScale = new Vector2((deadLinePosXMax - deadLinePosXMin), verticalSize / 10);
+        deadLineObjectCopy.transform.localScale = new Vector2((deadLineColumnFinish - deadLineColumnStart + 1) * horizontalSize, verticalSize / 10);
+        for(int i = 0; i < deadLineRowHeight; i++)
+        {
+            for(int j = deadLineColumnStart; j <= deadLineColumnFinish; j++)
+            {
+                //Dizinin bu indislerine blok yerleşirse oyun kaybedilir.
+                deadLine[i][j] = 2;
+            }
+        }
     }
     private void CalculateAvailableArea()
     {

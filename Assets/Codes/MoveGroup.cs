@@ -53,6 +53,11 @@ public class MoveGroup : MonoBehaviour
             int gridRow = (int)GridManager.gridManagerClass.FindRow(childPos.y);
             int gridColumn = (int)GridManager.gridManagerClass.FindColumn(childPos.x);
             GridManager.gridManagerClass.grid[gridRow][gridColumn] = 1;
+            if (GridManager.gridManagerClass.deadLine[gridRow][gridColumn] == 2)
+            {
+                Time.timeScale = 0;
+                LevelManager.levelManagerClass.gameOver = true;
+            }
         }
     }
     private void FixedUpdate()
@@ -82,7 +87,10 @@ public class MoveGroup : MonoBehaviour
                     //Bool metotların kontrolüyle bir yukarıdaki grid dolu ise hareket sağlanmaz.
                     FillGrid();
                     moveGroup = false;
-                    DestroyManager.destroyManagerClass.groupCount--;
+                    if (!LevelManager.levelManagerClass.gameOver)
+                    {
+                        DestroyManager.destroyManagerClass.groupCount--;
+                    }
                 }
                 translateTimer = translateTime;
             }

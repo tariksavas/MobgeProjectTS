@@ -2018,9 +2018,9 @@ MonoBehaviour:
   offset: 2
   yellowBlockCount: 6
   yellowAreaMinWidth: 2
-  deadLineHeightLevel: 13
-  deadLinePosXMin: -2
-  deadLinePosXMax: -1.5
+  deadLineRowHeight: 8
+  deadLineColumnStart: 0
+  deadLineColumnFinish: 5
   blockObject: {fileID: 2364927360166670211, guid: 21ed9ac2c34b7254b8a222c428d7993d, type: 3}
   deadLineObject: {fileID: 8604314318338261993, guid: 93a3574a7f67fe14090e90d89cf04281, type: 3}
   yellowBlockObject: {fileID: 330658732467362016, guid: 21ff7a282c7da804a9d6991817de7944, type: 3}
