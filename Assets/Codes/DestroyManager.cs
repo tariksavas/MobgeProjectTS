@@ -80,32 +80,59 @@ public class DestroyManager : MonoBehaviour
     {
         //Bu metotta satır silindiği zaman childlar arası bağlantılar kontrol edilir.
         int childCount = parentRefObj.transform.childCount;
+        float[] sortChilds = new float[childCount];
+        for(int i = 0; i < childCount; i++)
+        {
+            //Referans parenta ait tüm childların posX değerleri sırasıyla bu dizide toplanır.
+            //posX değerlerini almamızın sebebi eğer childlar arası kopma olursa posX değerine göre kopma olur.
+            //Yani satır silindiği için sütunlara arası kopma olabilir. Satırlar arası kopma olamaz.
+            sortChilds[i] = parentRefObj.transform.GetChild(i).transform.position.x;
+        }
         for (int i = 0; i < childCount - 1; i++)
         {
-            Vector2 child1Pos = parentRefObj.transform.GetChild(i).transform.position;
-            Vector2 child2Pos = parentRefObj.transform.GetChild(i + 1).transform.position;
-            if (math.abs(child1Pos.y - child2Pos.y) > GridManager.gridManagerClass.verticalSize)
+            for (int j = 0; j < childCount - 1; j++)
             {
-                //Childlar sıralıdır ve sıralı 2  child arasındaki y mesafesi verticalSize değerinden büyükse parçalanır.
-                CreateGroup(parentRefObj, i);
-                return false;
+                if(sortChilds[j] > sortChilds[j + 1])
+                {
+                    //Bubble Sort sıralama algoritması kullanılarak dizi küçükten büyüğe sıralanıyor.
+                    float temp = sortChilds[j];
+                    sortChilds[j] = sortChilds[j + 1];
+                    sortChilds[j + 1] = temp;
+                }
             }
-            else if (math.abs(child1Pos.x - child2Pos.x) > GridManager.gridManagerClass.horizontalSize)
+        }
+        for(int i = 0; i < childCount - 1; i++)
+        {
+            if(math.abs(sortChilds[i] - sortChilds[i + 1]) > GridManager.gridManagerClass.horizontalSize)
             {
-                //Childlar sıralıdır ve sıralı 2  child arasındaki x mesafesi horizontalSize değerinden büyükse parçalanır.
-                CreateGroup(parentRefObj, i);
+                //Sıralanmış dizideki indisler sonraki indis değeriyle karşılaştırılıyor.
+                CreateGroup(parentRefObj, sortChilds, i);
                 return false;
             }
         }
+        //Dizideki childlar arası kopma yok.
         return true;
     }
-    private void CreateGroup(GameObject parentRefObj, int key)
+    private void CreateGroup(GameObject parentRefObj, float[] sortChilds, int key)
     {
         //Referans alınan parent objenin ilgili child indisine kadar olan childlar yeni parent objeye taşınır.
         GameObject parentObjCopy = Instantiate(parentObj);
-        for(int i = 0; i <= key; i++)
+        Transform[] childObjects = new Transform[parentRefObj.transform.childCount];
+        for (int i = 0; i < parentRefObj.transform.childCount; i++)
         {
-            parentRefObj.transform.GetChild(0).transform.parent = parentObjCopy.transform;
+            //Referans parenta ait tüm childlar bu diziye aktarılıyor.
+            childObjects[i] = parentRefObj.transform.GetChild(i);
+        }
+        for (int i = 0; i <= key; i++)
+        {
+            for(int j = 0; j < childObjects.Length; j++)
+            {
+                if (childObjects[j].position.x <= sortChilds[i])
+                {
+                    //İlgili child değerinin posX değeri başka parenta aktarılacak child ile eşleşiyorsa taşınır.
+                    childObjects[j].parent = parentObjCopy.transform;
+                }
+            }            
         }
     }
     private void MoveObjects(int row, int column)

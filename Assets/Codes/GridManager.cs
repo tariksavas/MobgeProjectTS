@@ -77,12 +77,12 @@ public class GridManager : MonoBehaviour
         //Editörden alınan değerlere göre grid üzerinde bir yerlerde bloklar arasında oluşturulur.
         GameObject deadLineObjectCopy = Instantiate(deadLineObject);
         float yPos = (deadLineRowHeight * verticalSize) - vertical;
-        float xPos = (((float)(deadLineColumnFinish - deadLineColumnStart + 1) / 2) * horizontalSize) - horizontal;
+        float xPos = (((float)(deadLineColumnFinish - deadLineColumnStart) / 2) * horizontalSize) - horizontal;
         deadLineObjectCopy.transform.position = new Vector2(xPos, yPos);
-        deadLineObjectCopy.transform.localScale = new Vector2((deadLineColumnFinish - deadLineColumnStart + 1) * horizontalSize, verticalSize / 10);
+        deadLineObjectCopy.transform.localScale = new Vector2((deadLineColumnFinish - deadLineColumnStart) * horizontalSize, verticalSize / 10);
         for(int i = 0; i < deadLineRowHeight; i++)
         {
-            for(int j = deadLineColumnStart; j <= deadLineColumnFinish; j++)
+            for(int j = deadLineColumnStart; j < deadLineColumnFinish; j++)
             {
                 //Dizinin bu indislerine blok yerleşirse oyun kaybedilir.
                 deadLine[i][j] = 2;
